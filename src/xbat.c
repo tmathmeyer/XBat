@@ -137,11 +137,6 @@ ulng color_in_range(char *clow, char *chigh, int percent) {
     return result;
 }
 
-
-
-
-
-
 void remap(Window win, unsigned int w, unsigned int h) {
     XClearArea(disp, win, 0, 0, w, h, 0);
     XCopyArea(disp, canvas, win, gc, 0, 0, w, h, 0, 0);
@@ -219,7 +214,7 @@ void run(void) {
         draw_rectangle(border,border,
                 width-(2*border),height-(2*border),1,colorR);
         remap(win, width, height);
-        usleep(60000);
+        usleep(60000000);
     }
 }
 
