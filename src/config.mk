@@ -1,5 +1,4 @@
-VERSION = 4.2.1
-
+VERSION = 1.0
 
 # paths
 PREFIX = /usr/local

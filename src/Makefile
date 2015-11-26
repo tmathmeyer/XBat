@@ -2,26 +2,26 @@
 
 include config.mk
 
-all: tint3
+all: xbat
 
-tint3: tint3.o lwbi.o
+xbat: xbat.o lwbi.o
 
 .c.o: config.mk
 	@echo CC -c $<
 	@${CC} -c $< ${CFLAGS}
 
-tint3 tint3_path:
+xbat xbat_path:
 	@echo CC -o $@
 	@${CC} -o $@ $+ ${LDFLAGS}
 
 clean:
 	@echo cleaning
-	@rm -f tint3 *.o
+	@rm -f xbat *.o
 
-install: tint3
-	cp tint3 /usr/bin/tint3
+install: xbat
+	cp xbat /usr/bin/xbat
 
 uninstall:
-	rm -f /usr/bin/tint3
+	rm -f /usr/bin/xbat
 
-update: clean tint3
+update: clean xbat

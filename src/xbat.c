@@ -21,7 +21,6 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include "lwbi.h"
-#include "tint3.h"
 
 #define uchr unsigned char
 #define unt unsigned int
