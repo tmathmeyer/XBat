@@ -4,7 +4,7 @@ include config.mk
 
 all: tint3
 
-tint3: tint3.o draw.o lwbi.o
+tint3: tint3.o lwbi.o
 
 .c.o: config.mk
 	@echo CC -c $<
