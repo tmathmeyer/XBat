@@ -60,8 +60,8 @@ int main() {
 void run(void) {
     XEvent xe;
     while(1){
-        while(QLength(dc->dpy)) {
-            XNextEvent(dc->dpy, &xe);
+        while(QLength(disp)) {
+            XNextEvent(disp, &xe);
         }
 
         battery = (battery+1)%101;
@@ -79,13 +79,14 @@ void run(void) {
 void setup() {
     /* create a new draw ctx */
     dc = initdc();
-    
+    disp = disp;
+
     /* set to allow transparency */
     XVisualInfo vinfo;
-    XMatchVisualInfo(dc->dpy, DefaultScreen(dc->dpy), 32, TrueColor, &vinfo);
+    XMatchVisualInfo(disp, DefaultScreen(disp), 32, TrueColor, &vinfo);
     XSetWindowAttributes wa;
-    wa.colormap = XCreateColormap(dc->dpy,
-            DefaultRootWindow(dc->dpy),
+    wa.colormap = XCreateColormap(disp,
+            DefaultRootWindow(disp),
             vinfo.visual,
             AllocNone);
     wa.border_pixel = 0;
@@ -97,42 +98,42 @@ void setup() {
     unsigned long window_flags = 
         CWOverrideRedirect|CWEventMask|CWColormap|CWBorderPixel|CWBackPixel;
 
-    int screen = DefaultScreen(dc->dpy);
-    Window root = RootWindow(dc->dpy, screen);
+    int screen = DefaultScreen(disp);
+    Window root = RootWindow(disp, screen);
 
     wa.override_redirect = True;
     wa.event_mask = ExposureMask | KeyPressMask | VisibilityChangeMask;
-    win = XCreateWindow(dc->dpy, root, x, y, width, height, 0,
+    win = XCreateWindow(disp, root, x, y, width, height, 0,
             vinfo.depth, InputOutput,
             vinfo.visual,
             window_flags
             ,&wa);
-    dc->gc = XCreateGC(dc->dpy, win, 0, NULL);
+    dc->gc = XCreateGC(disp, win, 0, NULL);
 
     resizedc(dc, width, height, &vinfo, &wa);
-    XMapRaised(dc->dpy, win);
+    XMapRaised(disp, win);
 
     /* set window in dock mode, so that WM wont fuck with it */
-    long pval = XInternAtom (dc->dpy, "_NET_WM_WINDOW_TYPE_DOCK", False);
-    long prop = XInternAtom (dc->dpy, "_NET_WM_WINDOW_TYPE", False);
-    XChangeProperty(dc->dpy,win,prop,XA_ATOM,32,PropModeReplace,(uchr*)&pval,1);
+    long pval = XInternAtom (disp, "_NET_WM_WINDOW_TYPE_DOCK", False);
+    long prop = XInternAtom (disp, "_NET_WM_WINDOW_TYPE", False);
+    XChangeProperty(disp,win,prop,XA_ATOM,32,PropModeReplace,(uchr*)&pval,1);
 
     /* reserve space on the screen */
-    prop = XInternAtom(dc->dpy, "_NET_WM_STRUT_PARTIAL", False);
-    long ptyp = XInternAtom(dc->dpy, "CARDINAL", False);
+    prop = XInternAtom(disp, "_NET_WM_STRUT_PARTIAL", False);
+    long ptyp = XInternAtom(disp, "CARDINAL", False);
     int16_t strut[12] = {0, 0, height+y, 0, 0, 0, 0, 0, 0, width, 0, 0};
-    XChangeProperty(dc->dpy,win,prop,ptyp,16,PropModeReplace,(uchr*)strut,12);
+    XChangeProperty(disp,win,prop,ptyp,16,PropModeReplace,(uchr*)strut,12);
 
     /* This is for support with legacy WMs */
-    prop = XInternAtom(dc->dpy, "_NET_WM_STRUT", False);
+    prop = XInternAtom(disp, "_NET_WM_STRUT", False);
     unsigned long strut_s[4] = {0, height, 0, 0};
-    XChangeProperty(dc->dpy,win,prop,ptyp,32,PropModeReplace,(uchr*)strut_s,4);
+    XChangeProperty(disp,win,prop,ptyp,32,PropModeReplace,(uchr*)strut_s,4);
 
     /* Appear on all desktops */
-    prop = XInternAtom(dc->dpy, "_NET_WM_DESKTOP", False);
+    prop = XInternAtom(disp, "_NET_WM_DESKTOP", False);
     long adsk = 0xffffffff;
-    XChangeProperty(dc->dpy,win,prop,ptyp,32,PropModeReplace,(uchr*)&adsk,1);
+    XChangeProperty(disp,win,prop,ptyp,32,PropModeReplace,(uchr*)&adsk,1);
 
 
-    XSelectInput(dc->dpy, win, ExposureMask);
+    XSelectInput(disp, win, ExposureMask);
 }
